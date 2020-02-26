@@ -1,4 +1,8 @@
 #include <iostream>
+#include "model.h"
+#include "map.h"
+#include "data.h"
+
 using namespace std;
 
 
@@ -10,5 +14,6 @@ int main() {
     cout << "3.查询两个站点公交信息" << endl;
     cout << "0.退出" << endl;
 //    cout << "" << endl;
+    LoadMapData();
     return 0;
 }

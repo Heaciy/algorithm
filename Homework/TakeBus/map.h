@@ -7,10 +7,12 @@
 
 #include "data.h"
 #include "model.h"
+#include <iostream>
+#include <vector>
 
-BusMap BusMap_g;
+using namespace std;
 
-void LoadMapData(BusMap* BusMap_g);
+void LoadMapData();
 
 int FindBus(string bus);
 
@@ -22,6 +24,10 @@ int GetStation(string station);
 
 void AddBus(string bus, string pStart, string pEnd);
 
-bool AddRoute(string pBus, string pStart, string pEnd, int distance);
+bool AddRoute(int nBus, int nStart, int nEnd, int distance);
+
+int QueryStation(string pStation, string *buses);
+
+int QueryBus(string pBus, string *route);
 
 #endif //TAKEBUS_MAP_H
