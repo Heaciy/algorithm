@@ -8,7 +8,7 @@
 static void printThru(int from, int to, int bus) {
     auto routes = g_BusMap.stations[from].routes;
     if (from != to) {
-        cout << g_BusMap.stations[from].name << "--" << g_BusMap.buses[bus].name << "-->(T)";
+        cout << g_BusMap.stations[from].name << "--" << g_BusMap.buses[bus].name << "-->";
         for (auto route: routes) {
             if (route->bus == bus)
                 printThru(route->to, to, bus);
@@ -34,8 +34,12 @@ static pair<bool, vector<int>> isThru(int from, int to) {
     vector<int> thru;
     pair<bool, vector<int>> temp;
     for (const auto &route : g_BusMap.stations[from].routes)
-        if (test(from, to, route->bus)) thru.push_back(route->bus);
-    if (thru.size() == 0) {
+        if (from != to) { if (test(from, to, route->bus)) thru.push_back(route->bus); }
+        else {
+            temp.first = true;
+            temp.second.push_back(-1);
+        }
+    if (!temp.first && thru.size() == 0) {
         temp.first = false;
         return temp;
     } else {
@@ -49,10 +53,9 @@ static pair<bool, vector<int>> isThru(int from, int to) {
 static void printTurn(int from, int to, int bus, vector<int> preStation) {
     if (isThru(from, to).first) {
         for (auto busNum:isThru(from, to).second) {
-            cout << "bus:" << bus << "busNum" << busNum << endl;
             if (busNum != bus) {//换乘站后买的bus不能与换乘站前面的bus相等(直达),否则转乘就是直达(无意义/重复输出)
                 for (auto station: preStation) {
-                    cout << g_BusMap.stations[station].name << "--" << g_BusMap.buses[bus].name << "(" << bus << ")"
+                    cout << g_BusMap.stations[station].name << "--" << g_BusMap.buses[bus].name
                          << "-->";
                 }
                 printThru(from, to, busNum);
@@ -80,15 +83,16 @@ void takeBus() {
     if (temp.first) {//如果可以直达
         for (auto bus:temp.second) printThru(from_, to_, bus);
     } else {//不能直达
-        cout << "两站不能直达!";
+        cout << "两站不能直达!"<<endl;
     }
     //需要中转的路线
     list<const Route *> routeFrom = g_BusMap.stations[from_].routes;
     vector<int> preStation;
     for (auto route:routeFrom) {
-        preStation.push_back(from_);
-        printTurn(route->to, to_, route->bus, preStation);
-        cout << "\n--------------------------------" << endl;
-        preStation.clear();
+        if(from_!=to_){
+            preStation.push_back(from_);
+            printTurn(route->to, to_, route->bus, preStation);
+            preStation.clear();
+        }
     }
 }
