@@ -21,7 +21,7 @@ void readBusData() {
         dataStream.clear();
         dataStream.str(tmp);
         dataStream >> index >> name >> start >> end;
-        g_BusMap.buses.push_back(Bus(name, start, end));
+        g_BusMap.buses.emplace_back(Bus(name, start, end));
     }
     busFile.close();
 }
@@ -36,7 +36,7 @@ void readStationData() {
         dataStream.clear();
         dataStream.str(tmp);
         dataStream >> index >> name;
-        g_BusMap.stations.push_back(Station(name));
+        g_BusMap.stations.emplace_back(Station(name));
     }
     stationFile.close();
 }
@@ -50,7 +50,7 @@ void readRouteData() {
         dataStream.clear();
         dataStream.str(tmp);
         dataStream >> bus >> from >> to >> distance;
-        g_BusMap.routes.push_back(Route(from, to, bus, distance));
+        g_BusMap.routes.emplace_back(Route(from, to, bus, distance));
     }
     routeFile.close();
 }
@@ -59,7 +59,7 @@ void loadRouteData() {
     for (auto &station : g_BusMap.stations) station.routes.clear();
     for (const auto &route : g_BusMap.routes) {
         if (route.bus != -1)
-            g_BusMap.stations[route.from].routes.push_back(&(route));
+            g_BusMap.stations[route.from].routes.emplace_back(&(route));
     }
 }
 
@@ -72,7 +72,7 @@ void loadMapData() {
 
 pair<int, int> searchRoute(int station, int bus) {
     pair<int, int> result(-1, -1);
-    for (int i = 0; i < g_BusMap.routes.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.routes.size(); i++) {
         if (g_BusMap.routes[i].bus == bus) {
             if (g_BusMap.routes[i].to == station) result.first = i;
             if (g_BusMap.routes[i].from == station) result.second = i;
@@ -83,7 +83,7 @@ pair<int, int> searchRoute(int station, int bus) {
 
 void writeBusData() {
     ofstream busFile(BUS_FILE_PATH);
-    for (int i = 0; i < g_BusMap.buses.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.buses.size(); i++) {
         busFile << i << ' ' << g_BusMap.buses[i].name << ' '
                 << g_BusMap.buses[i].start << ' ' << g_BusMap.buses[i].end << endl;
     }
@@ -92,7 +92,7 @@ void writeBusData() {
 
 void writeStationData() {
     ofstream stationFile(STATION_FILE_PATH);
-    for (int i = 0; i < g_BusMap.stations.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.stations.size(); i++) {
         stationFile << i << ' ' << g_BusMap.stations[i].name << endl;
     }
     stationFile.close();

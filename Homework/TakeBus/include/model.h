@@ -1,5 +1,5 @@
 //
-// Created by ºÎ¼ÎºÀ on 2020/2/27.
+// Created by ä½•å˜‰è±ª on 2020/2/27.
 //
 
 #ifndef TAKEBUS_MODEL_H
@@ -28,7 +28,7 @@ struct Route {
 };
 
 struct Station {
-    Station(std::string name) : name(name) {} //ÏÈ¹¹Ôìname,routesÔÚ¼ÓÔØroutesÊ±¹¹Ôì
+    Station(std::string name) : name(name) {} //å…ˆæ„é€ name,routesåœ¨åŠ è½½routesæ—¶æ„é€ 
     std::string name;
     std::list<const Route*> routes;
 };

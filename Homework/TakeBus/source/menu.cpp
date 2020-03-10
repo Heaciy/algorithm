@@ -1,42 +1,44 @@
 //
-// Created by ºÎ¼ÎºÀ on 2020/2/29.
+// Created by ä½•å˜‰è±ª on 2020/2/29.
 //
+
+#include <utility>
 #include "menu.h"
-#include "serach.h"
+#include "search.h"
 
 void printMenu() {
-    cout << "=====¹«½»¹ÜÀíÏµÍ³=====" << "\n"
-         << "1.\t²é¿´ËùÓĞÕ¾µã" << "\n"
-         << "2.\t²é¿´ËùÓĞ¹«½»" << "\n"
-         << "3.\t²éÑ¯Õ¾µãĞÅÏ¢" << '\n'
-         << "4.\t²éÑ¯¹«½»ÏßÂ·" << '\n'
-         << "5.\t²éÑ¯Â·Ïß" << '\n'
-         << "6.\tÌí¼ÓÕ¾µã" << '\n'
-         << "7.\tĞŞ¸ÄÕ¾µã" << '\n'
-         << "8.\tÉ¾³ıÕ¾µã" << '\n'
-         << "9.\tÌí¼ÓÏßÂ·" << '\n'
-         << "10.\tĞŞ¸ÄÏßÂ·" << '\n'
-         << "11.\tÉ¾³ıÏßÂ·" << '\n'
-         << "12.\tÌí¼Ó¹«½»" << '\n'
-         << "13.\tĞŞ¸Ä¹«½»" << '\n'
-         << "14.\tÉ¾³ı¹«½»" << '\n'
-         << "15.\t±£´æÊı¾İ" << '\n'
-         << "0.\tÍË³ö" << '\n'
+    cout << "=====å…¬äº¤ç®¡ç†ç³»ç»Ÿ=====" << "\n"
+         << "1.\tæŸ¥çœ‹æ‰€æœ‰ç«™ç‚¹" << "\n"
+         << "2.\tæŸ¥çœ‹æ‰€æœ‰å…¬äº¤" << "\n"
+         << "3.\tæŸ¥è¯¢ç«™ç‚¹ä¿¡æ¯" << '\n'
+         << "4.\tæŸ¥è¯¢å…¬äº¤çº¿è·¯" << '\n'
+         << "5.\tæŸ¥è¯¢è·¯çº¿" << '\n'
+         << "6.\tæ·»åŠ ç«™ç‚¹" << '\n'
+         << "7.\tä¿®æ”¹ç«™ç‚¹" << '\n'
+         << "8.\tåˆ é™¤ç«™ç‚¹" << '\n'
+         << "9.\tæ·»åŠ çº¿è·¯" << '\n'
+         << "10.\tä¿®æ”¹çº¿è·¯" << '\n'
+         << "11.\tåˆ é™¤çº¿è·¯" << '\n'
+         << "12.\tæ·»åŠ å…¬äº¤" << '\n'
+         << "13.\tä¿®æ”¹å…¬äº¤" << '\n'
+         << "14.\tåˆ é™¤å…¬äº¤" << '\n'
+         << "15.\tä¿å­˜æ•°æ®" << '\n'
+         << "0.\té€€å‡º" << '\n'
          << "===================" << '\n'
-         << "ÇëÊäÈëÖ¸Áî±àºÅ£º";
+         << "è¯·è¾“å…¥æŒ‡ä»¤ç¼–å·ï¼š";
 }
 
-//¸ù¾İ¹«½»Ãû²éÕÒ¸Ã¹«½»µÄË÷Òı
-static int findBus(string name) {
-    for (int i = 0; i < g_BusMap.buses.size(); i++) {
+//æ ¹æ®å…¬äº¤åæŸ¥æ‰¾è¯¥å…¬äº¤çš„ç´¢å¼•
+static int findBus(const string &name) {
+    for (size_t i = 0; i < g_BusMap.buses.size(); i++) {
         if (g_BusMap.buses[i].name == name) return i;
     }
     return -1;
 }
 
-//¸ù¾İÆğµã£¬ÖÕµã£¬¹«½»Ãû²éÕÒrouteµÄË÷Òı
+//æ ¹æ®èµ·ç‚¹ï¼Œç»ˆç‚¹ï¼Œå…¬äº¤åæŸ¥æ‰¾routeçš„ç´¢å¼•
 static int findRoute(int from, int to, int bus) {
-    for (int i = 0; i < g_BusMap.routes.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.routes.size(); i++) {
         auto &route = g_BusMap.routes[i];
         if (route.from == from && route.to == to && route.bus == bus) {
             return i;
@@ -45,27 +47,26 @@ static int findRoute(int from, int to, int bus) {
     return -1;
 }
 
-//¸ù¾İÕ¾µãµÄÃû×Ö²éÕÒÕ¾µãµÄË÷Òı
-int findStation(string name) {
-    for (int i = 0; i < g_BusMap.stations.size(); i++) {
+//æ ¹æ®ç«™ç‚¹çš„åå­—æŸ¥æ‰¾ç«™ç‚¹çš„ç´¢å¼•
+int findStation(const string &name) {
+    for (size_t i = 0; i < g_BusMap.stations.size(); i++) {
         if (g_BusMap.stations[i].name == name) {
-//            cout<<i<<"--"<<name;
             return i;
         }
     }
     return -1;
 }
 
-//1.²é¿´ËùÓĞÕ¾µã
+//1.æŸ¥çœ‹æ‰€æœ‰ç«™ç‚¹
 static void listStations() {
-    for (int i = 0; i < g_BusMap.stations.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.stations.size(); i++) {
         cout << i << "--" << g_BusMap.stations[i].name << endl;
     }
 }
 
-//2.²é¿´ËùÓĞ¹«½»
+//2.æŸ¥çœ‹æ‰€æœ‰å…¬äº¤
 static void listBuses() {
-    for (int i = 0; i < g_BusMap.buses.size(); i++) {
+    for (size_t i = 0; i < g_BusMap.buses.size(); i++) {
         const auto &bus = g_BusMap.buses[i];
         cout << bus.name << " \t"
              << g_BusMap.stations[bus.start].name
@@ -74,24 +75,24 @@ static void listBuses() {
     }
 }
 
-//3.²éÑ¯Õ¾µãĞÅÏ¢
+//3.æŸ¥è¯¢ç«™ç‚¹ä¿¡æ¯
 static void printStationInfo() {
     string temp;
-    cout << "ÊäÈëÕ¾µãÃû³Æ£º";
+    cout << "è¾“å…¥ç«™ç‚¹åç§°ï¼š";
     cin >> temp;
     int index = findStation(temp);
     if (index != -1) {
         for (const auto &route : g_BusMap.routes)
-            if (route.from == index || route.to == index) {
+            if ((route.from == index || route.to == index) && route.bus != -1) {
                 cout << g_BusMap.stations[route.from].name << "-->" << g_BusMap.buses[route.bus].name
                      << "-->" << g_BusMap.stations[route.to].name << endl;
             }
     } else {
-        cout << "ÊäÈë´íÎó!" << endl;
+        cout << "è¾“å…¥é”™è¯¯!" << endl;
     }
 }
 
-//´òÓ¡¹«½»ÏßÂ·
+//è¾…åŠ©æ‰“å°å…¬äº¤çº¿è·¯
 static void doPrintBusInfo(int station, int bus) {
     for (auto it = g_BusMap.stations[station].routes.cbegin(); it != g_BusMap.stations[station].routes.cend(); it++) {
         if ((*it)->bus == bus) {
@@ -101,10 +102,10 @@ static void doPrintBusInfo(int station, int bus) {
     }
 }
 
-//4.²éÑ¯¹«½»ÏßÂ·
+//4.æŸ¥è¯¢å…¬äº¤çº¿è·¯
 static void printBusInfo() {
     string temp;
-    cout << "ÊäÈë¹«½»Ãû³Æ£º";
+    cout << "è¾“å…¥å…¬äº¤åç§°ï¼š";
     cin >> temp;
     int index = findBus(temp);
     if (index != -1) {
@@ -113,108 +114,100 @@ static void printBusInfo() {
         doPrintBusInfo(start, index);
         cout << endl;
     } else {
-        cout << "ÊäÈë´íÎó!" << endl;
+        cout << "è¾“å…¥é”™è¯¯!" << endl;
     }
 }
 
-//5.²éÕÒÁ½Õ¾Ö®¼äËùÓĞ·ûºÏÌõ¼şµÄÂ·Ïß
-//static void takeBus() {}
-
-//6.Ìí¼ÓÕ¾µã
+//6.æ·»åŠ ç«™ç‚¹
 static void addStation() {
     string name;
-    cout << "ÊäÈëĞÂÔöÕ¾µãµÄÃû³Æ:";
+    cout << "è¾“å…¥æ–°å¢ç«™ç‚¹çš„åç§°:";
     cin >> name;
     if (findStation(name) == -1) {
-        g_BusMap.stations.push_back(Station(name));
+        g_BusMap.stations.emplace_back(Station(name));
     } else {
-        cout << "Ãû³ÆÕ¼ÓÃ!" << endl;
+        cout << "åç§°å ç”¨!" << endl;
     }
 }
 
-//7.ĞŞ¸ÄÕ¾Ãû(Ãû×Ö)
+//7.ä¿®æ”¹ç«™å(åå­—)
 static void changeStation() {
     string oldName, newName;
-    cout << "ÊäÈë´ıĞŞ¸ÄÕ¾µãµÄÃû³Æ:";
+    cout << "è¾“å…¥å¾…ä¿®æ”¹ç«™ç‚¹çš„åç§°:";
     cin >> oldName;
     int index = findStation(oldName);
     if (index != -1) {
-        cout << "ÊäÈëĞÂÃû³Æ:";
+        cout << "è¾“å…¥æ–°åç§°:";
         cin >> newName;
-//        cout<<index<<"--"<<g_BusMap.stations[index].name;
         g_BusMap.stations[index].name = newName;
-    } else cout << "ÊäÈëÕ¾µã²»´æÔÚ!";
+    } else cout << "è¾“å…¥ç«™ç‚¹ä¸å­˜åœ¨!";
 }
 
-//8.É¾³ıÕ¾µã
+//8.åˆ é™¤ç«™ç‚¹
 static void deleteStation() {
     string name;
-    cout << "ÊäÈë´ıÉ¾³ıÕ¾µãµÄÃû³Æ:";
+    cout << "è¾“å…¥å¾…åˆ é™¤ç«™ç‚¹çš„åç§°:";
     cin >> name;
     int index = findStation(name);
     if (index != -1) {
-        for (int i = 0; i < g_BusMap.buses.size(); i++) {
+        for (size_t i = 0; i < g_BusMap.buses.size(); i++) {
             pair<int, int> temp = searchRoute(index, i);
-            if (temp.first == -1 && temp.second == -1)// ¸ÃbusÉÏÃ»ÓĞ´Ëµã
+            if (temp.first == -1 && temp.second == -1)// è¯¥busä¸Šæ²¡æœ‰æ­¤ç‚¹
                 continue;
-            else if (temp.first == -1) {//Îª¸ÃbusµÄÆğµã
+            else if (temp.first == -1) {//ä¸ºè¯¥busçš„èµ·ç‚¹
                 g_BusMap.buses[i].start = g_BusMap.routes[temp.second].to;
-                g_BusMap.routes.erase(g_BusMap.routes.begin() + temp.second);
-            } else if (temp.second == -1) {//Îª¸ÃÂ·ÏßµÄÖÕµã
+                g_BusMap.routes[temp.second].bus = -1;
+            } else if (temp.second == -1) {//ä¸ºè¯¥è·¯çº¿çš„ç»ˆç‚¹
                 g_BusMap.buses[i].end = g_BusMap.routes[temp.first].from;
                 g_BusMap.stations[g_BusMap.buses[i].end].routes.remove(&g_BusMap.routes[temp.first]);
-                g_BusMap.routes.erase(g_BusMap.routes.begin() + temp.first);
-            } else {//ÎªÖĞ×ªÕ¾
+                g_BusMap.routes[temp.first].bus = -1;
+            } else {//ä¸ºä¸­è½¬ç«™
                 g_BusMap.routes[temp.first].to = g_BusMap.routes[temp.second].to;
                 g_BusMap.routes[temp.first].distance += g_BusMap.routes[temp.second].distance;
-                g_BusMap.routes.erase(g_BusMap.routes.begin() + temp.second);
-            }
-            // ´Óg_BusMapÖĞÉ¾³ı¸ÃÕ¾µã
-            g_BusMap.stations.erase(g_BusMap.stations.begin() + index);
-            // µ÷ÕûrouteÖĞstationµÄ±àºÅ
-            for (int i = index; i < g_BusMap.stations.size(); i++) {
-                for (auto &route : g_BusMap.routes) {
-                    if (route.from == i + 1) route.from--;
-                    if (route.to == i + 1) route.to--;
-                }
-            }
-            // µ÷ÕûbusÖĞstationµÄ±àºÅ
-            for (int i = index; i < g_BusMap.stations.size(); i++) {
-                for (auto &bus : g_BusMap.buses) {
-                    if (bus.start == i + 1) bus.start--;
-                    if (bus.end == i + 1) bus.end--;
-                }
+                g_BusMap.routes[temp.second].bus = -1;
             }
         }
-        cout << "É¾³ı³É¹¦!" << endl;
-    } else cout << "ÊäÈëÕ¾µã²»´æÔÚ!";
+        // ä»g_BusMapä¸­åˆ é™¤è¯¥ç«™ç‚¹
+        g_BusMap.stations.erase(g_BusMap.stations.begin() + index);
+        // è°ƒæ•´routeä¸­stationçš„ç¼–å·
+        for (auto &route:g_BusMap.routes) {
+            if (route.from > index) route.from--;
+            if (route.to > index) route.to--;
+        }
+        // è°ƒæ•´busä¸­stationçš„ç¼–å·
+        for (auto &bus:g_BusMap.buses) {
+            if (bus.start > index) bus.start--;
+            if (bus.end > index) bus.end--;
+        }
+        cout << "åˆ é™¤æˆåŠŸ!" << endl;
+    } else cout << "è¾“å…¥ç«™ç‚¹ä¸å­˜åœ¨!";
 }
 
-//9.Ìí¼ÓÏßÂ·
+//9.æ·»åŠ çº¿è·¯
 static void addRoute(int from, int to, int bus, int distance) {
-    g_BusMap.routes.push_back(Route(from, to, bus, distance));
-    g_BusMap.stations[from].routes.push_back(&(g_BusMap.routes.back()));
+    g_BusMap.routes.emplace_back(Route(from, to, bus, distance));
+    g_BusMap.stations[from].routes.emplace_back(&(g_BusMap.routes.back()));
 }
 
-//10.ĞŞ¸ÄÏßÂ·
+//10.ä¿®æ”¹çº¿è·¯
 static void changeRoute(int from, int to, int bus, int distance) {
     int index = findRoute(from, to, bus);
     if (index != -1) {
         g_BusMap.routes[index].distance = distance;
-    } else cout << "ÊäÈëµÄÂ·Ïß²»´æÔÚ,Çë¼ì²éÊı¾İ!";
+    } else cout << "è¾“å…¥çš„è·¯çº¿ä¸å­˜åœ¨,è¯·æ£€æŸ¥æ•°æ®!";
 }
 
-//11.É¾³ıÏßÂ·
+//11.åˆ é™¤çº¿è·¯
 static void deleteRoute(int from, int to, int bus) {
     int index = findRoute(from, to, bus);
     if (index != -1) {
-        g_BusMap.stations[from].routes.remove(&(g_BusMap.routes[index]));
-        g_BusMap.routes.erase(g_BusMap.routes.begin() + index);
-    } else cout << "ÊäÈëµÄÂ·Ïß²»´æÔÚ,Çë¼ì²éÊı¾İ!";
+        g_BusMap.routes[index].bus = -1;
+        g_BusMap.stations[from].routes.remove(&g_BusMap.routes[index]);
+    } else cout << "è¾“å…¥çš„è·¯çº¿ä¸å­˜åœ¨,è¯·æ£€æŸ¥æ•°æ®!";
 }
 
-//14.É¾³ı¹«½»
-static void deleteBus(string name) {
+//14.åˆ é™¤å…¬äº¤
+static void deleteBus(const string &name) {
     int index = findBus(name);
     int from = g_BusMap.buses[index].start;
     int end = g_BusMap.buses[index].end;
@@ -224,87 +217,86 @@ static void deleteBus(string name) {
                 int tmp = route->to;
                 deleteRoute(from, route->to, index);
                 from = tmp;
+                break; //?
             }
     }
-    //µ÷ÕûrouteÖĞµÄbus
-    for (int i = index; i < g_BusMap.buses.size(); i++) {
-        for (auto route: g_BusMap.routes)
-            if (route.bus == index + 1) route.bus--;
-    }
     g_BusMap.buses.erase(g_BusMap.buses.begin() + index);
+    for (auto &route:g_BusMap.routes) {
+        if (route.bus > index) route.bus--;
+    }
 }
 
-//12.Ìí¼Ó¹«½»
+//12.æ·»åŠ å…¬äº¤
 static void addBus(string name) {
     int num, distance;
-    cout << "ÊäÈë´Ë¹«½»ÖĞ°üº¬µÄÕ¾µãÊı:";
+    cout << "è¾“å…¥æ­¤å…¬äº¤ä¸­åŒ…å«çš„ç«™ç‚¹æ•°:";
     cin >> num;
     vector<string> nameList;
     vector<int> numList;
     vector<int> distanceList;
     string from, tmp;
-    cout << "ÊäÈëÊ¼·¢Õ¾Ãû³Æ:";
+    cout << "è¾“å…¥å§‹å‘ç«™åç§°:";
     cin >> from;
     num--;
     while (findStation(from) == -1) {
-        cout << "ÊäÈëµÄÕ¾µã²»´æÔÚ!ÇëÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥çš„ç«™ç‚¹ä¸å­˜åœ¨!è¯·é‡æ–°è¾“å…¥:";
         cin >> from;
     }
-    nameList.push_back(from);
+    nameList.emplace_back(from);
     while (num--) {
-        cout << "ÊäÈë¾àÀë Õ¾µã(Èç:100 A):";
+        cout << "è¾“å…¥è·ç¦» ç«™ç‚¹(å¦‚:100 A):";
         cin >> distance >> tmp;
         while (findStation(tmp) == -1) {
-            cout << "ÊäÈëµÄÕ¾µã²»´æÔÚ!ÇëÖØĞÂÊäÈë:";
+            cout << "è¾“å…¥çš„ç«™ç‚¹ä¸å­˜åœ¨!è¯·é‡æ–°è¾“å…¥:";
             cin >> distance >> tmp;
         }
-        distanceList.push_back(distance);
-        nameList.push_back(tmp);
+        distanceList.emplace_back(distance);
+        nameList.emplace_back(tmp);
     }
-    //Ìí¼ÓÏà¹ØµÄroute
-    for (int i = 0; i < nameList.size() - 1; i++) {
+    //æ·»åŠ ç›¸å…³çš„route
+    for (size_t i = 0; i < nameList.size() - 1; i++) {
         addRoute(findStation(nameList[i]), findStation(nameList[i + 1]), g_BusMap.buses.size(), distanceList[i]);
     }
-    //Ìí¼Ó¹«½»
-    g_BusMap.buses.push_back(Bus(name, findStation(nameList[0]), findStation(nameList.back())));
+    //æ·»åŠ å…¬äº¤
+    g_BusMap.buses.emplace_back(Bus(std::move(name), findStation(nameList[0]), findStation(nameList.back())));
 }
 
-//13.ĞŞ¸Ä¹«½»
+//13.ä¿®æ”¹å…¬äº¤
 static void changeBus() {
     string name;
-    cout << "ÊäÈë´ıĞŞ¸Ä¹«½»µÄÃû³Æ(Èç:1_U)";
+    cout << "è¾“å…¥å¾…ä¿®æ”¹å…¬äº¤çš„åç§°(å¦‚:1_U)";
     cin >> name;
     int index = findBus(name);
     if (index != -1) {
         deleteBus(name);
         addBus(name);
-    } else cout << "¸Ã¹«½»Ãû²»´æÔÚ,Çë¼ì²éÊı¾İ!";
+    } else cout << "è¯¥å…¬äº¤åä¸å­˜åœ¨,è¯·æ£€æŸ¥æ•°æ®!";
 }
 
-//¸¨ÖúÓÃ»§ÊäÈë
+//è¾…åŠ©ç”¨æˆ·è¾“å…¥
 static vector<int> enter_check() {
     string from, to, bus;
     vector<int> tmp;
-    cout << "ÊäÈë³ö·¢Õ¾ µ½´ïÕ¾ ËùÊô¹«½»(Èç:A B 1_U):";
+    cout << "è¾“å…¥å‡ºå‘ç«™ åˆ°è¾¾ç«™ æ‰€å±å…¬äº¤(å¦‚:A B 1_U):";
     cin >> from >> to >> bus;
     while (findStation(from) == -1 || findStation(to) == -1 || findBus(bus) == -1) {
-        cout << "ÊäÈë´íÎó!ÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥é”™è¯¯!é‡æ–°è¾“å…¥:";
         cin >> from >> to >> bus;
     }
-    tmp.push_back(findStation(from));
-    tmp.push_back(findStation(to));
-    tmp.push_back(findBus(bus));
+    tmp.emplace_back(findStation(from));
+    tmp.emplace_back(findStation(to));
+    tmp.emplace_back(findBus(bus));
     return tmp;
 }
 
-//¸ørouteÌí¼Ó¼ì²éĞŞÕı¾¯¸æº¯Êı
+//ç»™routeæ·»åŠ æ£€æŸ¥ä¿®æ­£è­¦å‘Šå‡½æ•°
 static void doAddRoute() {
     vector<int> tmp = enter_check();
     int distance;
-    cout << "ÊäÈë¾àÀë:";
+    cout << "è¾“å…¥è·ç¦»:";
     cin >> distance;
     while (distance <= 0) {
-        cout << "ÊäÈë´íÎó!ÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥é”™è¯¯!é‡æ–°è¾“å…¥:";
         cin >> distance;
     }
     addRoute(tmp[0], tmp[1], tmp[2], distance);
@@ -313,10 +305,10 @@ static void doAddRoute() {
 static void doChangeRoute() {
     vector<int> tmp = enter_check();
     int distance;
-    cout << "ÊäÈëĞÂ¾àÀë:";
+    cout << "è¾“å…¥æ–°è·ç¦»:";
     cin >> distance;
     while (distance <= 0) {
-        cout << "ÊäÈë´íÎó!ÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥é”™è¯¯!é‡æ–°è¾“å…¥:";
         cin >> distance;
     }
     changeRoute(tmp[0], tmp[1], tmp[2], distance);
@@ -329,10 +321,10 @@ static void doDeleteRoute() {
 
 static void doDeleteBus() {
     string name;
-    cout << "ÊäÈë´ıÉ¾³ı¹«½»µÄÃû³Æ:";
+    cout << "è¾“å…¥å¾…åˆ é™¤å…¬äº¤çš„åç§°:";
     cin >> name;
     while (findBus(name) == -1) {
-        cout << "¸Ã¹«½»Ãû²»´æÔÚ!ÇëÖØĞÂÊäÈë:";
+        cout << "è¯¥å…¬äº¤åä¸å­˜åœ¨!è¯·é‡æ–°è¾“å…¥:";
         cin >> name;
     }
     deleteBus(name);
@@ -340,13 +332,20 @@ static void doDeleteBus() {
 
 static void doAddBus() {
     string name;
-    cout << "ÊäÈë´ıÌí¼Ó¹«½»µÄÃû³Æ:";
+    cout << "è¾“å…¥å¾…æ·»åŠ å…¬äº¤çš„åç§°:";
     cin >> name;
     while (findBus(name) != -1) {
-        cout << "¸Ã¹«½»ÃûÒÑ´æÔÚ!ÇëÖØĞÂÊäÈë:";
+        cout << "è¯¥å…¬äº¤åå·²å­˜åœ¨!è¯·é‡æ–°è¾“å…¥:";
         cin >> name;
     }
     addBus(name);
+}
+
+//åˆ é™¤æœ‰å·²åˆ é™¤æ ‡è®°çš„route(æ—¢route.bus==-1)
+static void filterRoute() {
+    for (auto it = g_BusMap.routes.begin(); it != g_BusMap.routes.end(); it++) {
+        if (it->bus == -1) g_BusMap.routes.erase(it--);
+    }
 }
 
 void run(int index) {
@@ -364,7 +363,7 @@ void run(int index) {
             printBusInfo();
             break;
         case 5:
-            takeBus();
+            takeBus_();
             break;
         case 6:
             addStation();
@@ -394,10 +393,11 @@ void run(int index) {
             doDeleteBus();
             break;
         case 15:
-            writeMapData();//Ğ´ÈëÊı¾İ
+            filterRoute();//å…ˆè¿‡æ»¤æ•°æ®
+            writeMapData();//å†™å…¥æ•°æ®
             break;
         default:
-            cout << "ÊäÈë´íÎó!" << endl;
+            cout << "è¾“å…¥é”™è¯¯!" << endl;
             break;
     }
 }

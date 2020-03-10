@@ -1,98 +1,67 @@
 //
-// Created by ºÎ¼ÎºÀ on 2020/3/1.
+// Created by ä½•å˜‰è±ª on 2020/3/8.
 //
+
 #include "menu.h"
-#include "serach.h"
 
-//´òÓ¡Ö±´ïÂ·Ïß
-static void printThru(int from, int to, int bus) {
-    auto routes = g_BusMap.stations[from].routes;
-    if (from != to) {
-        cout << g_BusMap.stations[from].name << "--" << g_BusMap.buses[bus].name << "-->";
-        for (auto route: routes) {
-            if (route->bus == bus)
-                printThru(route->to, to, bus);
-        }
-    } else cout << g_BusMap.stations[from].name << endl;
-}
+int MAX_CHANGE_NUM = 1;//æœ€å¤§æ¢ä¹˜æ¬¡æ•°
 
-//ÅĞ¶Ï´Ófrom¾­busÊÇ·ñÄÜµ½to
-static bool test(int from, int to, int bus) {
-    for (const auto &route : g_BusMap.stations[from].routes) {
-        if (route->bus != bus)
-            continue;
-        else {
-            if (route->to == to) return true;
-            return test(route->to, to, bus);
-        }
-    }
-    return false;
-}
-
-//·µ»ØËùÓĞµÄÖ±´ï·½°¸
-static pair<bool, vector<int>> isThru(int from, int to) {
-    vector<int> thru;
-    pair<bool, vector<int>> temp;
-    for (const auto &route : g_BusMap.stations[from].routes)
-        if (from != to) { if (test(from, to, route->bus)) thru.push_back(route->bus); }
-        else {
-            temp.first = true;
-            temp.second.push_back(-1);
-        }
-    if (!temp.first && thru.size() == 0) {
-        temp.first = false;
-        return temp;
-    } else {
-        temp.first = true;
-        temp.second = thru;
-        return temp;
-    }
-}
-
-//´òÓ¡·ÇÖ±´ïÂ·Ïß
-static void printTurn(int from, int to, int bus, vector<int> preStation) {
-    if (isThru(from, to).first) {
-        for (auto busNum:isThru(from, to).second) {
-            if (busNum != bus) {//»»³ËÕ¾ºóÂòµÄbus²»ÄÜÓë»»³ËÕ¾Ç°ÃæµÄbusÏàµÈ(Ö±´ï),·ñÔò×ª³Ë¾ÍÊÇÖ±´ï(ÎŞÒâÒå/ÖØ¸´Êä³ö)
-                for (auto station: preStation) {
-                    cout << g_BusMap.stations[station].name << "--" << g_BusMap.buses[bus].name
-                         << "-->";
-                }
-                printThru(from, to, busNum);
+static void doSearch(int index, int target, list<int> &visited,
+                     list<const Route *> &routes,
+                     vector<list<const Route *>> &results,
+                     int changed) {
+    visited.emplace_back(index);
+    for (auto route:g_BusMap.stations[index].routes) {
+        bool flag = true;
+        for (auto station: visited) {
+            if (route->to == station) {
+                flag = false;
+                break;
             }
         }
-    } else if (from != g_BusMap.buses[bus].end) {
-        preStation.push_back(from);
-        for (auto route:g_BusMap.stations[from].routes)
-            if (route->bus == bus)
-                printTurn(route->to, to, bus, preStation);
+        if (flag) { //å¦‚æœè¯¥routeç¬¦åˆè¦æ±‚
+            int tmp = changed; //ç”¨äºåˆ¤æ–­åœ¨è¿è¡Œè¿‡ç¨‹ä¸­changedæ˜¯å¦æ”¹å˜(changed++)äº†,è‹¥å‘ç”Ÿæ”¹å˜ï¼Œåˆ™åœ¨å›æº¯æ—¶å°†å…¶å¤åŸ(changed--)
+            if (!routes.empty() && route->bus != routes.back()->bus) changed += 1;//æ¢ä¹˜æ¬¡æ•°åŠ ä¸€
+            if (changed <= MAX_CHANGE_NUM) {//æ¢ä¹˜æ¬¡æ•°å°äºæœ€å¤§æ¢ä¹˜æ¬¡æ•°é™åˆ¶
+                routes.emplace_back(route);
+                if (route->to == target) {
+                    results.emplace_back(routes);
+                    routes.pop_back();
+                    if (changed > tmp) changed--;
+                } else {
+                    doSearch(route->to, target, visited, routes, results, changed);
+                    if (changed > tmp) changed--;
+                }
+            } else {
+                if (changed > tmp) changed--;
+                continue;
+            }
+        }
     }
+    visited.pop_back();
+    if (!routes.empty()) routes.pop_back();
 }
 
-//5.ÕÒµ½Á½Õ¾Ö®¼ä·ûºÏÒªÇóµÄÂ·Ïß
-void takeBus() {
+void takeBus_() {
     string from, to;
-    cout << "ÊäÈëÆğÊ¼Õ¾ ÖÕµãÕ¾(ÈçA B):";
+    cout << "è¾“å…¥èµ·å§‹ç«™ ç»ˆç‚¹ç«™(å¦‚A B):";
     int from_, to_;
     cin >> from >> to;
     while (((from_ = findStation(from)) == -1) || ((to_ = findStation(to)) == -1)) {
-        cout << "ÊäÈë´íÎó!ÖØĞÂÊäÈë:";
+        cout << "è¾“å…¥é”™è¯¯!é‡æ–°è¾“å…¥:";
         cin >> from >> to;
     }
-    pair<bool, vector<int>> temp = isThru(from_, to_);
-    if (temp.first) {//Èç¹û¿ÉÒÔÖ±´ï
-        for (auto bus:temp.second) printThru(from_, to_, bus);
-    } else {//²»ÄÜÖ±´ï
-        cout << "Á½Õ¾²»ÄÜÖ±´ï!"<<endl;
-    }
-    //ĞèÒªÖĞ×ªµÄÂ·Ïß
-    list<const Route *> routeFrom = g_BusMap.stations[from_].routes;
-    vector<int> preStation;
-    for (auto route:routeFrom) {
-        if(from_!=to_){
-            preStation.push_back(from_);
-            printTurn(route->to, to_, route->bus, preStation);
-            preStation.clear();
+    list<int> visited;
+    list<const Route *> routes;
+    vector<list<const Route *>> results;
+    int changed = 0;
+    doSearch(from_, to_, visited, routes, results, changed);
+    for (const auto &result : results) {
+        for (const auto &route : result) {
+            cout << g_BusMap.buses[route->bus].name << ": "
+                 << g_BusMap.stations[route->from].name << "-->"
+                 << g_BusMap.stations[route->to].name << endl;
         }
+        cout << "----------" << endl;
     }
 }

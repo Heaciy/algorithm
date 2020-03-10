@@ -4,18 +4,18 @@
 using namespace std;
 
 int main() {
-    loadMapData();//¼ÓÔØÊý¾Ý
+    loadMapData();//åŠ è½½æ•°æ®
     int choice = 0;
-    while (true){
+    while (true) {
         printMenu();
-        cin>>choice;
-        if(choice!=0){
+        cin >> choice;
+        if (choice != 0) {
             run(choice);
-            cout<<"°´»Ø³µ¼ü¼ÌÐø:";
+            cout << "æŒ‰å›žè½¦é”®ç»§ç»­:";
             cin.get();
             cin.get();
-        } else{
-            cout<<"ÍË³ö"<<endl;
+        } else {
+            cout << "é€€å‡º" << endl;
             break;
         }
     }

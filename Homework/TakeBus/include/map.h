@@ -1,5 +1,5 @@
 //
-// Created by ºÎ¼ÎºÀ on 2020/2/27.
+// Created by ä½•å˜‰è±ª on 2020/2/27.
 //
 
 #ifndef TAKEBUS_MAP_H
@@ -24,7 +24,7 @@ void loadRouteData();
 
 void loadMapData();
 
-// ËÑË÷°üº¬¸ÃstationµÄÇ°ºóroute
+// æœç´¢åŒ…å«è¯¥stationçš„å‰åroute
 std::pair<int, int> searchRoute(int station, int flag);
 
 void writeBusData();
