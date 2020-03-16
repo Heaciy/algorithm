@@ -201,7 +201,7 @@ static void changeRoute(int from, int to, int bus, int distance) {
 static void deleteRoute(int from, int to, int bus) {
     int index = findRoute(from, to, bus);
     if (index != -1) {
-        g_BusMap.routes[index].bus = -1;
+        g_BusMap.routes[index].bus = -1; //在删除某条route时,先暂时将其route.bus置为-1(为了防止vector中元素的指针改变)
         g_BusMap.stations[from].routes.remove(&g_BusMap.routes[index]);
     } else cout << "输入的路线不存在,请检查数据!";
 }
@@ -363,7 +363,7 @@ void run(int index) {
             printBusInfo();
             break;
         case 5:
-            takeBus_();
+            takeBus();
             break;
         case 6:
             addStation();

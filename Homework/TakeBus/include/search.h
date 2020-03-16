@@ -5,8 +5,8 @@
 #ifndef TAKEBUS_SEARCH_H
 #define TAKEBUS_SEARCH_H
 
-extern int MAX_CHANGE_NUM;
+extern int MAX_CHANGE_NUM; //最大换乘次数
 
-void takeBus_();
+void takeBus(); //查询两站之间符合要求的线路
 
 #endif //TAKEBUS_SEARCH_H
