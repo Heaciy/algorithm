@@ -1,4 +1,6 @@
 test/
 temp/
 cmake-build-debug/
+bin/
 .idea/
+.vscode/
