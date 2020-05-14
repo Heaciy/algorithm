@@ -35,4 +35,4 @@ def findMax(origin):
 
 
 if __name__ == "__main__":
-    findMax(origin2)
+    findMax(origin)
