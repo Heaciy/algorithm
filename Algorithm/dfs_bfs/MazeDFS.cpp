@@ -38,7 +38,7 @@ int main() {
                 MAZE[y][x] = 3; //标记当前点为3，表示走过的点
                 if (newy == 4 && newx == 4) {
                     output(seq, index);
-                    return;
+                    return 0;
                 }
                 break;
             }
@@ -64,6 +64,7 @@ void output(Position *seq, int index) {
 bool check(int newy, int newx) {
     if (newy < 0 || newy >= 5 || newx < 0 || newx >= 5) //越界
         return false;
-    // 1是墙，2是死胡同， 3是走过的点 if (MAZE[newy][newx] != 0) return 0;
+    // 1是墙，2是死胡同， 3是走过的点 
+    if (MAZE[newy][newx] != 0) return false;
     return true;
 }
