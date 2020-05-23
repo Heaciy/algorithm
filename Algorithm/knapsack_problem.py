@@ -29,6 +29,12 @@ for i in range(1, len(items)+1):
         else:
             y = table[i-1][j]
         n = table[i-1][j]
-        table[i][j] = max(y,n)
+        table[i][j] = max(y, n)
 
 print(table)
+
+
+# 有界背包问题(如果限定物品j最多只能选择bj个，则问题称为有界背包问题。)
+
+
+# 无界背包问题(如果不限定每种物品的数量，则问题称为无界背包问题。)
