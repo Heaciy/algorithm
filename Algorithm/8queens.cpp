@@ -1,21 +1,21 @@
 #include <iostream>
 using namespace std;
 
-int QUEEN[20], N;         // Nä¸ºçš‡åæ•°
-int COLUMN[20];           // è®°å½•åˆ—è¢«å ç”¨çš„æƒ…å†µ
-int MAIN_DIAGONAL[40];    // è®°å½•ä¸»å¯¹è§’çº¿è¢«å ç”¨çš„æƒ…å†µ
-int COUNTER_DIAGONAL[20]; // è®°å½•å‰¯å¯¹è§’çº¿è¢«å ç”¨çš„æƒ…å†µ
+int QUEEN[20], N;         // NÎª»ÊºóÊı
+int COLUMN[20];           // ¼ÇÂ¼ÁĞ±»Õ¼ÓÃµÄÇé¿ö
+int MAIN_DIAGONAL[40];    // ¼ÇÂ¼Ö÷¶Ô½ÇÏß±»Õ¼ÓÃµÄÇé¿ö
+int COUNTER_DIAGONAL[20]; // ¼ÇÂ¼¸±¶Ô½ÇÏß±»Õ¼ÓÃµÄÇé¿ö
 
-void dfs(int n);   // nä¸ªçš‡åï¼Œæ·±åº¦ä¼˜å…ˆæœç´¢
-bool check(int i); // ç¬¬nä¸ªçš‡åä¸ç¬¬1è‡³n-1ä¸ªçš‡åæœ‰æ²¡æœ‰å†²çª
-// ä¸å¯è¡Œè¿”å›false,å¯è¡Œè¿”å›true
-void output(int n); // è¾“å‡ºnä¸ªçš‡åçš„ä½ç½®
+void dfs(int n);   // n¸ö»Êºó£¬Éî¶ÈÓÅÏÈËÑË÷
+bool check(int n); // µÚn¸ö»ÊºóÓëµÚ1ÖÁn-1¸ö»ÊºóÓĞÃ»ÓĞ³åÍ»
+// ²»¿ÉĞĞ·µ»Øfalse,¿ÉĞĞ·µ»Øtrue
+void output(int n); // Êä³ön¸ö»ÊºóµÄÎ»ÖÃ
 
 int main() {
     int i;
-    cout << "è¾“å‡ºNå€¼:";
+    cout << "ÊäÈëNÖµ:";
     cin >> N;
-    // åˆå§‹åŒ–
+    // ³õÊ¼»¯
     for (i = 1; i <= N; i++)
         COLUMN[i] = 0;
     for (i = 1; i <= 2 * N - 1; i++)
@@ -29,15 +29,15 @@ int main() {
 void dfs(int n) {
     int i, j;
     QUEEN[i] = 0;
-    i = 1; // iæ˜¯è¡Œå·
+    i = 1; // iÊÇĞĞºÅ
     while (i > 0) {
         QUEEN[i]++;
-        while (QUEEN[i] <= N && check(i))
+        while (QUEEN[i] <= N && !check(i)) // µ±Ç°ÁĞ²»¿ÉĞĞ
             QUEEN[i]++;
         if (QUEEN[i] <= N) {
             if (i == N)
                 output(N);
-            else { // çºªå½•åˆ—ã€å¯¹è§’çº¿èµ„æºå ç”¨
+            else { // ¼ÍÂ¼ÁĞ¡¢¶Ô½ÇÏß×ÊÔ´Õ¼ÓÃ
                 j = QUEEN[i];
                 COLUMN[j] = 1;
                 MAIN_DIAGONAL[i - j + N] = 1;
@@ -45,11 +45,11 @@ void dfs(int n) {
                 i++;
                 QUEEN[i] = 0;
             }
-        } else { // å›åˆ°ä¸Šä¸€è¡Œï¼Œä¸Šä¸€è¡Œçš„çš‡åå½“å‰ä½ç½®ä¸å¯è¡Œ
+        } else { // »Øµ½ÉÏÒ»ĞĞ£¬ÉÏÒ»ĞĞµÄ»Êºóµ±Ç°Î»ÖÃ²»¿ÉĞĞ
             i--;
             if (i <= 0)
                 break;
-            j = QUEEN[i]; // é‡Šæ”¾åˆ—ã€å¯¹è§’çº¿èµ„æº
+            j = QUEEN[i]; // ÊÍ·ÅÁĞ¡¢¶Ô½ÇÏß×ÊÔ´
             COLUMN[j] = 0;
             MAIN_DIAGONAL[i - j + N] = 0;
             COUNTER_DIAGONAL[i + j] = 0;
@@ -58,11 +58,11 @@ void dfs(int n) {
 }
 
 bool check(int i) {
-    int j; // jæ˜¯ç¬¬iè¡Œçš„çš‡åæ‰€åœ¨åˆ—å·
+    int j; // jÊÇµÚiĞĞµÄ»ÊºóËùÔÚÁĞºÅ
     j = QUEEN[i];
     if (COLUMN[j] == 1 || MAIN_DIAGONAL[i - j + N] == 1 ||
         COUNTER_DIAGONAL[i + j] == 1)
-        return false;
+        return false; //µ±Ç°ÁĞ²»¿ÉĞĞ
     else
         return true;
 }
@@ -70,5 +70,6 @@ bool check(int i) {
 void output(int n) {
     int i;
     for (i = 1; i <= n; i++)
-        cout << QUEEN[i];
+        cout << QUEEN[i] << " ";
+    cout << endl;
 }
