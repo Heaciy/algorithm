@@ -1,6 +1,7 @@
 # https://zh.wikipedia.org/wiki/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98
 # https://blog.csdn.net/mu399/article/details/7722810
 
+# 动态递归解法
 # 01背包的状态转换方程 f[i,j] = Max{ f[i-1,j-Wi]+Pi( j >= Wi ),  f[i-1,j] }
 # f[i,j]表示前i件物品中选择若干件放在承重为j的背包中可以取得的最大价值
 # 决策: 为了使背包中物品总价值最大化，第i件物品应该放入背包中吗?
@@ -32,6 +33,8 @@ for i in range(1, len(items)+1):
         table[i][j] = max(y, n)
 
 print(table)
+
+# 回溯法求解
 
 
 # 有界背包问题(如果限定物品j最多只能选择bj个，则问题称为有界背包问题。)
