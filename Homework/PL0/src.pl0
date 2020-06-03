@@ -1,0 +1,11 @@
+const a=10;
+var b, c;
+procedure   p;
+    begin
+        c := b + a ;
+    end
+begin
+b >= c
+学号： 201813138110
+姓名： 荷西
+end.
